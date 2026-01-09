@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="dtu-logo.png" alt="Dtu" height="200" width="200">
+
+    </div>
+    
+
+  <h1>DTU – Attendance Tracker</h1>
+  <p id="date"></p>
+  <p id="day"></p>
+</header>
+
+<section class="today-section">
+  <h2>Today's Classes</h2>
+  <div id="todayClasses" class="card-container"></div>
+</section>
+
+<section class="summary-section">
+  <h2>Subject-wise Attendance</h2>
+  <div id="subjectSummary" class="card-container"></div>
+</section>
+
+<section class="calendar-section">
+  <h2>Month Summary</h2>
+  <div id="monthlyAnalysis"></div>
+</section>
+
+<section class="export-section">
+  <h2>Export Attendance</h2>
+  <button onclick="exportExcel()">Export Excel</button>
+  <button onclick="exportPDF()">Export PDF</button>
+</section>
+<footer>
+    <p>copyright ©2026 ||❤️ vikesh ❤️ ||</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

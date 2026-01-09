@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  margin: 0;
+}
+
+header{
+  background: #1e3a8a;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  
+}
+.logo{
+    height: 100px;
+    justify-content: left;
+    display: flex;
+}
+
+h2 {
+  color: #1e3a8a;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 10px 20px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  width: 260px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.button-group button {
+  padding: 7px 12px;
+  margin: 4px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.present { background: #22c55e; color:white; }
+.absent { background: #ef4444; color:white; }
+.undo { background: gray; color:white;}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 10px 20px;
+}
+
+.calendar-day {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+footer {
+    background: #1e3a8a;
+    color: white;
+    padding: 20px;
+    text-align: center;
+
+}
