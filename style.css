@@ -1,80 +1,310 @@
+/* ===== Global ===== */
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f6fb;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: linear-gradient(#ebf3ff, #f8fbff);
   margin: 0;
+  color: #0f172a;
 }
 
-header{
-  background: #1e3a8a;
+h1, h2, h3 {
+  margin: 5px 0;
+}
+
+/* ===== Header ===== */
+header {
+  background: linear-gradient(135deg, #1e3a8a, #0f5bd9);
   color: white;
-  padding: 20px;
+  padding: 25px 15px;
   text-align: center;
-  
-}
-.logo{
-    height: 100px;
-    justify-content: left;
-    display: flex;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
-h2 {
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+#date, #day {
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+/* ===== Sections ===== */
+section {
+  margin: 20px auto;
+  width: 95%;
+  max-width: 1100px;
+  background: white;
+  padding: 18px 15px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+section h2 {
   color: #1e3a8a;
+  margin-bottom: 10px;
 }
 
+/* ===== Cards ===== */
 .card-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  padding: 10px 20px;
+  gap: 16px;
+  padding-top: 10px;
 }
 
 .card {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  width: 260px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 14px;
+  width: 270px;
+  border: 1px solid #e5e7eb;
+  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
 .card h3 {
   margin-top: 0;
+  color: #111827;
+}
+
+/* ===== Buttons ===== */
+.button-group {
+  margin-top: 8px;
 }
 
 .button-group button {
   padding: 7px 12px;
   margin: 4px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: .3px;
 }
 
-.present { background: #22c55e; color:white; }
-.absent { background: #ef4444; color:white; }
-.undo { background: gray; color:white;}
+.present { background: #16a34a; color:white; }
+.absent { background: #dc2626; color:white; }
+.undo { background: #6b7280; color:white; }
 
+.button-group button:hover {
+  opacity: .85;
+}
+
+/* ===== Warnings ===== */
 .warning {
-  color: red;
+  color: #dc2626;
   font-weight: bold;
 }
 
+/* ===== Calendar ===== */
 #calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  padding: 10px 20px;
+  gap: 8px;
+  padding-top: 12px;
 }
 
 .calendar-day {
-  background: white;
-  border-radius: 8px;
-  padding: 8px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 3px;
   text-align: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  font-size: 13px;
 }
-footer {
-    background: #1e3a8a;
-    color: white;
-    padding: 20px;
-    text-align: center;
 
+.calendar-day.present {
+  background: #d1fae5;
+}
+
+.calendar-day.absent {
+  background: #fee2e2;
+}
+
+/* ===== Export buttons ===== */
+.export-section button {
+  background: #1e3a8a;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.export-section button:hover {
+  opacity: .9;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: #111827;
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-size: 14px;
+}
+/* ===== Global ===== */
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: linear-gradient(#ebf3ff, #f8fbff);
+  margin: 0;
+  color: #0f172a;
+}
+
+h1, h2, h3 {
+  margin: 5px 0;
+}
+
+/* ===== Header ===== */
+header {
+  background: linear-gradient(135deg, #1e3a8a, #0f5bd9);
+  color: white;
+  padding: 25px 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+#date, #day {
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+/* ===== Sections ===== */
+section {
+  margin: 20px auto;
+  width: 95%;
+  max-width: 1100px;
+  background: white;
+  padding: 18px 15px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+section h2 {
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+/* ===== Cards ===== */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 10px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 14px;
+  width: 270px;
+  border: 1px solid #e5e7eb;
+  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #111827;
+}
+
+/* ===== Buttons ===== */
+.button-group {
+  margin-top: 8px;
+}
+
+.button-group button {
+  padding: 7px 12px;
+  margin: 4px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: .3px;
+}
+
+.present { background: #16a34a; color:white; }
+.absent { background: #dc2626; color:white; }
+.undo { background: #6b7280; color:white; }
+
+.button-group button:hover {
+  opacity: .85;
+}
+
+/* ===== Warnings ===== */
+.warning {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+/* ===== Calendar ===== */
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.calendar-day {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 3px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  font-size: 13px;
+}
+
+.calendar-day.present {
+  background: #d1fae5;
+}
+
+.calendar-day.absent {
+  background: #fee2e2;
+}
+
+/* ===== Export buttons ===== */
+.export-section button {
+  background: #1e3a8a;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.export-section button:hover {
+  opacity: .9;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: #111827;
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-size: 14px;
 }
