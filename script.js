@@ -1,30 +1,37 @@
-const APP_PASSWORD = "vikesh123"; 
+// ---------- LOGIN ----------
+const APP_PASSWORD = "vikesh123";
 
-function ensureLogin() {
+function login() {
+  const value = document.getElementById("loginPassword").value;
 
-  // already logged in?
-  if (localStorage.getItem("loggedIn") === "true") {
-      return; // kuchh mat karo
-  }
-
-  // ask password
-  let input = prompt("Enter password to open website:");
-
-  if (input === APP_PASSWORD) {
-      localStorage.setItem("loggedIn", "true");
-      alert("Login success");
+  if (value === APP_PASSWORD) {
+    localStorage.setItem("loggedIn", "true");
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("app").style.display = "block";
   } else {
-      alert("Wrong password – try again");
-      ensureLogin();  // reload nahi — sirf dubara poochho
+    document.getElementById("loginMsg").innerText = "❌ Wrong password";
   }
 }
 
+function logout() {
+  localStorage.removeItem("loggedIn");
+  location.reload();
+}
+
+// auto open if already logged in
+window.onload = () => {
+  if (localStorage.getItem("loggedIn") === "true") {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  }
+};
 
 
-
+// ---------- GOOGLE SHEET ----------
 const API_URL = "https://script.google.com/macros/s/AKfycbxDszE5hdj4kEmOKxk9_cjFftHXgOLjLTJgDBPsN0_tSaegoqL2bF0fEo0T34jubfQY6Q/exec";
 
-// SUBJECT LIST
+
+// ---------- SUBJECT MAP ----------
 const subjectsMap = {
   "Maths": "Mathematics-II",
   "Physics": "Physics",
@@ -37,7 +44,8 @@ const subjectsMap = {
   "Physics Lab": "Physics(Lab)"
 };
 
-// TIMETABLE
+
+// ---------- TIMETABLE ----------
 const timetable = {
   "Monday": [
     {time:"8–10", subject:"Discrete Maths", type:"Lecture"},
@@ -66,7 +74,8 @@ const timetable = {
   ]
 };
 
-// TODAY INFO
+
+// ---------- DATE ----------
 const today = new Date();
 document.getElementById("date").innerText = today.toDateString();
 
@@ -74,14 +83,16 @@ const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","S
 const todayName = weekdays[today.getDay()];
 document.getElementById("day").innerText = "Today is: " + todayName;
 
-// LOAD / SAVE ATTENDANCE
+
+// ---------- STORAGE ----------
 let attendance = JSON.parse(localStorage.getItem("attendance")) || {};
 
 function save(){
   localStorage.setItem("attendance", JSON.stringify(attendance));
 }
 
-// GOOGLE SHEET SYNC
+
+// ---------- SYNC GOOGLE SHEET ----------
 async function syncWithGoogleSheet(date, subjectKey, status){
   if(!status) return;
 
@@ -95,11 +106,12 @@ async function syncWithGoogleSheet(date, subjectKey, status){
       body:JSON.stringify({date, subject, status})
     });
   }catch(e){
-    console.log("Sheet sync fail");
+    console.log("Sheet sync failed");
   }
 }
 
-// RENDER TODAY CLASSES
+
+// ---------- TODAY CLASSES ----------
 function loadTodayClasses(){
   const container = document.getElementById("todayClasses");
   container.innerHTML = "";
@@ -141,7 +153,8 @@ function loadTodayClasses(){
   });
 }
 
-// MARK ATTENDANCE
+
+// ---------- MARK ----------
 function mark(id,val,subject){
   attendance[id].status = val;
   save();
@@ -156,7 +169,8 @@ function mark(id,val,subject){
   }
 }
 
-// SUBJECT-WISE SUMMARY
+
+// ---------- SUBJECT SUMMARY ----------
 function loadSummary(){
   const container = document.getElementById("subjectSummary");
   container.innerHTML = "";
@@ -194,9 +208,10 @@ function loadSummary(){
   });
 }
 
-// MONTH SUMMARY
+
+// ---------- MONTH SUMMARY ----------
 function loadMonthSummary(){
-  const container = document.getElementById("monthlyAnalysis");
+  const container = document.getElementById("calendar");
 
   let p=0,a=0;
 
@@ -223,8 +238,8 @@ function loadMonthSummary(){
   `;
 }
 
-// RUN
-ensureLogin();
+
+// ---------- RUN ----------
 loadTodayClasses();
 loadSummary();
-loadMonthlyAnalysis();
+loadMonthSummary();
