@@ -1,16 +1,21 @@
 const APP_PASSWORD = "vikesh123"; 
 
-function login() {
-  const input = prompt("Enter password:");
+function ensureLogin() {
+
+  // already logged in?
+  if (localStorage.getItem("loggedIn") === "true") {
+      return; // kuchh mat karo
+  }
+
+  // ask password
+  let input = prompt("Enter password to open website:");
+
   if (input === APP_PASSWORD) {
       localStorage.setItem("loggedIn", "true");
-      alert("Login successful");
-      loadTodayClasses();
-      loadSummary();
-      loadMonthlyAnalysis();
+      alert("Login success");
   } else {
-      alert("Wrong password");
-      window.location.reload();
+      alert("Wrong password – try again");
+      ensureLogin();  // reload nahi — sirf dubara poochho
   }
 }
 
@@ -219,6 +224,7 @@ function loadMonthSummary(){
 }
 
 // RUN
+ensureLogin();
 loadTodayClasses();
 loadSummary();
-loadMonthSummary();
+loadMonthlyAnalysis();
