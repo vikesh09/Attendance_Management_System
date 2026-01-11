@@ -5,18 +5,31 @@
   <title>Attendance Tracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+<!-- 🔐 LOGIN PAGE -->
+<div id="loginPage">
+  <h2>🔐 Attendance Login</h2>
+  <input type="password" id="loginPassword" placeholder="Enter password">
+  <button onclick="login()">Login</button>
+  <p id="loginMsg"></p>
+</div>
+
+<!-- 🌟 MAIN APP (hidden before login) -->
+<div id="app" style="display:none;">
 
 <header>
     <div class="logo">
         <img src="dtu-logo.png" alt="Dtu" height="200" width="200">
-
     </div>
-    
 
-  <h1>DTU – Attendance Tracker</h1>
-  <p id="date"></p>
-  <p id="day"></p>
+    <h1>DTU – Attendance Tracker</h1>
+    <p id="date"></p>
+    <p id="day"></p>
+
+    <!-- 🚪 logout button -->
+    <button onclick="logout()" class="logout-btn">Logout</button>
 </header>
 
 <section class="today-section">
@@ -31,7 +44,7 @@
 
 <section class="calendar-section">
   <h2>Month Summary</h2>
-  <div id="monthlyAnalysis"></div>
+  <div id="calendar"></div>
 </section>
 
 <section class="export-section">
@@ -39,9 +52,12 @@
   <button onclick="exportExcel()">Export Excel</button>
   <button onclick="exportPDF()">Export PDF</button>
 </section>
+
 <footer>
-    <p>copyright ©2026 ||❤️ vikesh ❤️ ||</p>
+    <p>copyright ©2026 || ❤️ Vikesh ❤️ ||</p>
 </footer>
+
+</div>  <!-- end app -->
 
 <script src="script.js"></script>
 </body>
