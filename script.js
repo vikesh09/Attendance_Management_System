@@ -1,6 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxDszE5hdj4kEmOKxk9_cjFftHXgOLjLTJgDBPsN0_tSaegoqL2bF0fEo0T34jubfQY6Q/exec";
 
-// 1. SUBJECT LIST
+// SUBJECT LIST
 const subjectsMap = {
   "Maths": "Mathematics-II",
   "Physics": "Physics",
@@ -9,11 +9,11 @@ const subjectsMap = {
   "Basic ML": "Machine Learning (SEC-I)",
   "Logical Reasoning": "AEC/VAC",
   "Data Lab": "Data(lab)",
-  "Basic ML Lab": "Basic Ml(Lab)",
+  "Basic ML Lab": "Basic ML(Lab)",
   "Physics Lab": "Physics(Lab)"
 };
 
-// 2. TIMETABLE
+// TIMETABLE
 const timetable = {
   "Monday": [
     {time:"8–10", subject:"Discrete Maths", type:"Lecture"},
@@ -42,157 +42,164 @@ const timetable = {
   ]
 };
 
-// --- DISPLAY LOGIC ---
+// TODAY INFO
 const today = new Date();
 document.getElementById("date").innerText = today.toDateString();
+
 const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const todayName = weekdays[today.getDay()];
-const dayDisplay = document.getElementById("day");
-if(dayDisplay) dayDisplay.innerText = "Today is: " + todayName;
+document.getElementById("day").innerText = "Today is: " + todayName;
 
+// LOAD / SAVE ATTENDANCE
 let attendance = JSON.parse(localStorage.getItem("attendance")) || {};
 
-function save() {
+function save(){
   localStorage.setItem("attendance", JSON.stringify(attendance));
 }
 
-// --- SYNC TO GOOGLE SHEET ---
-async function syncWithGoogleSheet(date, subjectKey, status) {
-    if (!status) return;
-    const sheetHeaderName = subjectsMap[subjectKey] || subjectKey;
-    const data = {
-        date: date,
-        subject: sheetHeaderName,
-        status: status
-    };
-    try {
-        await fetch(API_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        console.log("Synced: " + sheetHeaderName);
-    } catch (error) {
-        console.error("Sync Error:", error);
-    }
+// GOOGLE SHEET SYNC
+async function syncWithGoogleSheet(date, subjectKey, status){
+  if(!status) return;
+
+  const subject = subjectsMap[subjectKey] || subjectKey;
+
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({date, subject, status})
+    });
+  }catch(e){
+    console.log("Sheet sync fail");
+  }
 }
 
-// --- RENDER CLASSES ---
+// RENDER TODAY CLASSES
 function loadTodayClasses(){
   const container = document.getElementById("todayClasses");
-  if (!container) return;
   container.innerHTML = "";
+
   if(!timetable[todayName]){
-    container.innerHTML = "<p>No classes today (Enjoy!)</p>";
+    container.innerHTML = "<p>No classes today 😊</p>";
     return;
   }
+
   timetable[todayName].forEach(cls=>{
     const dateStr = today.toDateString();
     const id = dateStr + "_" + cls.subject + "_" + cls.time;
-    if(!attendance[id]){ attendance[id] = {status:null}; }
+
+    if(!attendance[id]) attendance[id] = {status:null};
+
+    const status = attendance[id].status || "Not marked";
+
     const card = document.createElement("div");
     card.className = "card";
-    const currentStatus = attendance[id].status || "Not marked";
+
     card.innerHTML = `
       <h3>${cls.subject} (${cls.type})</h3>
       <p><b>Time:</b> ${cls.time}</p>
-      <p><b>Status:</b> <span class="status-label">${currentStatus}</span></p>
+      <p><b>Status:</b> <span>${status}</span></p>
+
       <div class="button-group">
-        <button class="present" ${attendance[id].status === 'present' ? 'disabled' : ''} onclick="mark('${id}','present','${cls.subject}')">Present</button>
-        <button class="absent" ${attendance[id].status === 'absent' ? 'disabled' : ''} onclick="mark('${id}','absent','${cls.subject}')">Absent</button>
-        <button class="undo" onclick="mark('${id}',null,'${cls.subject}')">Undo</button>
+        <button class="present" ${status==="present"?"disabled":""}
+          onclick="mark('${id}','present','${cls.subject}')">Present</button>
+
+        <button class="absent" ${status==="absent"?"disabled":""}
+          onclick="mark('${id}','absent','${cls.subject}')">Absent</button>
+
+        <button class="undo"
+          onclick="mark('${id}',null,'${cls.subject}')">Undo</button>
       </div>
     `;
+
     container.appendChild(card);
   });
 }
 
-// --- MARK ATTENDANCE ---
-function mark(id, val, subjectKey) {
-  if (attendance[id].status === val) return;
+// MARK ATTENDANCE
+function mark(id,val,subject){
   attendance[id].status = val;
   save();
+
   loadTodayClasses();
   loadSummary();
-  loadMonthlyAnalysis(); // Refresh analysis on mark
-  if (val !== null) {
-      const datePart = id.split("_")[0];
-      syncWithGoogleSheet(datePart, subjectKey, val);
+  loadMonthSummary();
+
+  if(val!==null){
+    const datePart = id.split("_")[0];
+    syncWithGoogleSheet(datePart, subject, val);
   }
 }
 
-// --- SUBJECT-WISE SUMMARY ---
+// SUBJECT-WISE SUMMARY
 function loadSummary(){
+  const container = document.getElementById("subjectSummary");
+  container.innerHTML = "";
+
   const summary = {};
+
   Object.keys(attendance).forEach(id=>{
-    const parts = id.split("_");
-    const subject = parts[1];
-    if(!summary[subject]) summary[subject]={p:0,a:0};
+    const subject = id.split("_")[1];
+
+    if(!summary[subject]) summary[subject] = {p:0,a:0};
+
     if(attendance[id].status==="present") summary[subject].p++;
     if(attendance[id].status==="absent") summary[subject].a++;
   });
-  const container = document.getElementById("subjectSummary");
-  if (!container) return;
-  container.innerHTML = "";
-  Object.keys(subjectsMap).forEach(subKey=>{
-    const s = summary[subKey] || {p:0,a:0};
-    const total = s.p+s.a;
-    const percent = total===0?0:Math.round((s.p/total)*100);
+
+  Object.keys(subjectsMap).forEach(sub=>{
+    const rec = summary[sub] || {p:0,a:0};
+
+    const total = rec.p + rec.a;
+    const percent = total===0 ? 0 : Math.round((rec.p/total)*100);
+
+    const warn = percent < 75 ? `<p class="warning">⚠ Below 75%</p>` : ``;
+
     const card = document.createElement("div");
     card.className = "card";
+
     card.innerHTML = `
-      <h3>${subjectsMap[subKey]}</h3>
-      <p>Present: ${s.p} | Absent: ${s.a}</p>
-      <p><b>Percentage: ${percent}%</b></p>
+      <h3>${subjectsMap[sub]}</h3>
+      <p>Present: ${rec.p} | Absent: ${rec.a}</p>
+      <p><b>Attendance: ${percent}%</b></p>
+      ${warn}
     `;
+
     container.appendChild(card);
   });
 }
 
-// --- MONTHLY ANALYSIS (REPLACED CALENDAR) ---
-function loadMonthlyAnalysis() {
-  const container = document.getElementById("calendar"); 
-  if (!container) return;
-  
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
-  const monthName = today.toLocaleString('default', { month: 'long' });
+// MONTH SUMMARY
+function loadMonthSummary(){
+  const container = document.getElementById("monthlyAnalysis");
 
-  let presentCount = 0;
-  let absentCount = 0;
+  let p=0,a=0;
 
-  Object.keys(attendance).forEach(id => {
-    const parts = id.split("_");
-    const entryDate = new Date(parts[0]);
-    if (entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
-      if (attendance[id].status === "present") presentCount++;
-      if (attendance[id].status === "absent") absentCount++;
+  Object.keys(attendance).forEach(id=>{
+    const d = new Date(id.split("_")[0]);
+
+    if(d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear()){
+      if(attendance[id].status==="present") p++;
+      if(attendance[id].status==="absent") a++;
     }
   });
 
-  const totalClasses = presentCount + absentCount;
-  const monthlyPercent = totalClasses === 0 ? 0 : Math.round((presentCount / totalClasses) * 100);
+  const total = p + a;
+  const monthPercent = total===0 ? 0 : Math.round((p/total)*100);
 
   container.innerHTML = `
-    <div class="card" style="border-top: 4px solid #007bff; margin-top: 20px;">
-      <h2 style="text-align:center;">📊 ${monthName} Stats</h2>
-      <div style="display: flex; justify-content: space-around; text-align: center; margin: 15px 0;">
-        <div><p>Total</p><h3>${totalClasses}</h3></div>
-        <div><p style="color:green;">Present</p><h3>${presentCount}</h3></div>
-        <div><p style="color:red;">Absent</p><h3>${absentCount}</h3></div>
-      </div>
-      <div style="text-align:center;">
-        <p><b>Monthly Attendance: ${monthlyPercent}%</b></p>
-        <div style="background:#eee; height:12px; border-radius:10px; overflow:hidden; margin:10px 0;">
-          <div style="background:${monthlyPercent >= 75 ? '#28a745' : '#dc3545'}; width:${monthlyPercent}%; height:100%;"></div>
-        </div>
-      </div>
+    <div class="card">
+      <h3>Monthly Summary</h3>
+      <p>Total Classes: ${total}</p>
+      <p>Present: ${p}</p>
+      <p>Absent: ${a}</p>
+      <p><b>${monthPercent}% Attendance</b></p>
     </div>
   `;
 }
 
-// Run
+// RUN
 loadTodayClasses();
 loadSummary();
-loadMonthlyAnalysis();
+loadMonthSummary();
