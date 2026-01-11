@@ -1,3 +1,22 @@
+const APP_PASSWORD = "vikesh123"; 
+
+function login() {
+  const input = prompt("Enter password:");
+  if (input === APP_PASSWORD) {
+      localStorage.setItem("loggedIn", "true");
+      alert("Login successful");
+      loadTodayClasses();
+      loadSummary();
+      loadMonthlyAnalysis();
+  } else {
+      alert("Wrong password");
+      window.location.reload();
+  }
+}
+
+
+
+
 const API_URL = "https://script.google.com/macros/s/AKfycbxDszE5hdj4kEmOKxk9_cjFftHXgOLjLTJgDBPsN0_tSaegoqL2bF0fEo0T34jubfQY6Q/exec";
 
 // SUBJECT LIST
